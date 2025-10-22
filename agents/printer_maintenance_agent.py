@@ -467,6 +467,453 @@ M500                                     ; Save to EEPROM
 - Prime tower helps - creates consistent starting point
 - Ooze shield - physical barrier for parked nozzle's ooze
 
+## HARDWARE UPGRADES & MODIFICATIONS:
+
+### UPGRADE PHILOSOPHY & PRIORITY
+
+**Golden Rule for Beginners**: DON'T upgrade until you understand WHY you need to
+- Use the printer stock for at least 50-100 hours
+- Learn calibration and slicer settings first
+- Many "problems" are actually settings/calibration issues
+- Identify specific limitations before spending money
+
+**Upgrade Priority Order** (General Recommendations):
+
+**Phase 1 - Reliability & Maintenance** (Do First):
+1. **Upgraded Bed Springs** ($5-10) - Yellow or silicone spacers, reduces re-leveling frequency
+2. **Metal Extruder** ($10-15) - Replace plastic extruder, prevents arm cracking
+3. **Capricorn PTFE Tubing** ($10-15) - Better heat resistance, tighter tolerances
+4. **Power Supply** ($30-50) - Only for original Ender 3 with generic PSU (safety concern)
+
+**Phase 2 - Quality of Life** (After mastering basics):
+5. **Auto Bed Leveling** ($30-50) - BLTouch, CR Touch, or inductive probe
+6. **Magnetic PEI Build Surface** ($15-25) - Better adhesion, easy removal
+7. **Dual Z-Axis** ($40-80) - Eliminates X-gantry sag (detailed below)
+
+**Phase 3 - Performance Enhancement** (For specific needs):
+8. **All-Metal Hotend** ($30-80) - For high-temp materials (ABS, Nylon, PC)
+9. **Direct Drive Conversion** ($50-100) - For flexible filaments (TPU)
+10. **Linear Rails** ($60-120) - For precision improvement
+11. **32-bit Board** ($30-60) - Quieter drivers (TMC2208/2209), more features
+
+**Phase 4 - Speed Optimization** (Advanced users):
+12. **High-Flow Hotend** ($50-150) - CHT nozzle, Volcano, Dragon
+13. **Input Shaping** (Klipper) - Faster acceleration without ringing
+14. **Lighter Toolhead** - Reduce moving mass for speed
+
+### UPGRADE RECOMMENDATIONS BY USE CASE
+
+**For RELIABILITY (Budget: $25-75)**:
+- Metal extruder ($12)
+- Yellow bed springs ($8)
+- Capricorn tubing ($12)
+- Spare nozzles ($10)
+- Optional: Upgraded PSU for original Ender 3 ($40)
+**Expected Improvement**: Fewer failures, less maintenance, consistent prints
+
+**For PRINT QUALITY (Budget: $60-150)**:
+- Auto bed leveling sensor ($35)
+- PEI build surface ($20)
+- Dual Z-axis kit ($50)
+- All-metal hotend if printing PETG+ ($40)
+**Expected Improvement**: Better first layers, reduced Z-wobble, fewer adhesion issues
+
+**For SPEED (Budget: $100-300)**:
+- 32-bit board with TMC drivers ($40)
+- High-flow hotend ($60)
+- Klipper firmware (free, requires Raspberry Pi $35)
+- Input shaping accelerometer ($15)
+- Lightweight toolhead parts ($50)
+**Expected Improvement**: 2-3x faster prints with maintained quality
+
+**For FLEXIBLE FILAMENTS (Budget: $60-120)**:
+- Direct drive conversion kit ($70)
+- OR print mount + pancake stepper ($40)
+- Upgraded extruder gear ($20)
+**Expected Improvement**: Reliable TPU/TPE printing
+
+**For HIGH-TEMP MATERIALS (Budget: $40-100)**:
+- All-metal hotend (E3D V6, Microswiss, Dragon) ($50-80)
+- Upgraded cooling fan 5000+ RPM ($15)
+- Enclosure (DIY $50, or purchased $100-200)
+**Expected Improvement**: Print ABS, Nylon, PC, CF composites safely
+
+### SPECIFIC UPGRADE DEEP DIVES
+
+#### All-Metal Hotend Upgrades
+
+**Best Options**:
+- **E3D V6** ($65) - Industry standard, excellent heat break, precise engineering
+- **Microswiss** ($50) - Drop-in replacement, easy install, reliable
+- **Creality Spider** ($45) - Budget option, can reach 500°C, great value
+- **Dragon** ($75) - High-flow capable, excellent thermal performance
+
+**Installation Considerations**:
+- PID tuning REQUIRED after installation
+- May need different thermistor settings in firmware
+- Increase cooling fan speed for PLA (all-metal more prone to heat creep)
+- Can print up to 300°C+ (Nylon, PC, PEEK)
+- ⚠️ Higher temps = more safety concerns
+
+#### Direct Drive Conversions
+
+**Benefits**:
+- Flexible filament capability (TPU, TPE)
+- Reduced retraction distance (0.5-2mm vs 6-8mm Bowden)
+- Better control over extrusion
+- Less stringing potential
+
+**Drawbacks**:
+- Added weight to X-axis = slower max speeds
+- May need slower acceleration settings
+- Potential ringing/ghosting if not tuned
+
+**Popular Kits**:
+- **Microswiss Direct Drive** ($80) - Complete kit, includes all-metal hotend
+- **E3D Hemera** ($130) - Premium option, integrated extruder + hotend
+- **DIY Orbiter V2** ($50) - Lightweight, excellent performance
+
+### DUAL Z-AXIS CONVERSION (DETAILED GUIDE)
+
+#### Why Upgrade to Dual Z-Axis?
+
+**Problem Being Solved**:
+Single Z lead screw on one side causes X-gantry to sag on unsupported side, leading to:
+- Uneven layer lines
+- Z-banding artifacts
+- Difficulty keeping X-gantry level
+- Increased wear on single Z motor
+- Binding if X-gantry becomes misaligned
+
+**Benefits After Upgrade**:
+- Eliminates X-gantry sag completely
+- Distributes load evenly across gantry
+- Reduces mechanical stress on components
+- Improves print quality, especially on taller prints
+- Can enable automatic gantry leveling (with dual drivers)
+
+**When You NEED This Upgrade**:
+- Visible X-gantry sag (measure with ruler - should be <0.5mm difference)
+- Z-banding despite lead screw straightness
+- X-gantry difficult to keep level
+- Prints fail on one side vs other
+- Large or heavy direct drive extruder
+
+#### Dual Z-Axis Approaches: Comparison
+
+**Approach 1: Single Driver (Parallel Motors)**
+**How It Works**: Y-splitter cable connects both Z motors to one driver
+**Cost**: $40-60 (kit with motor, lead screw, mounts)
+
+**Pros**:
+- Simplest installation - no firmware changes
+- Motors mechanically synchronized (can't desync)
+- Works with any board/firmware
+- Lower cost
+
+**Cons**:
+- Cannot auto-correct if gantry becomes unlevel
+- Driver must handle current for both motors (may run hotter)
+- If gantry unlevel, must manually adjust
+
+**Best For**: Budget-conscious, want simple reliability upgrade
+
+**Approach 2: Independent Dual Drivers (E1 Port)**
+**How It Works**: Second motor uses E1 (extruder 1) driver port
+**Cost**: $50-80 (kit) + must have spare driver
+
+**Pros**:
+- Firmware can auto-level gantry with G34 command
+- Each motor has optimal current
+- Can use dual endstops or probe for alignment
+- Self-correcting if gantry becomes unlevel
+
+**Cons**:
+- Requires firmware reconfiguration
+- More complex setup
+- Can desync if not properly configured
+- Uses second extruder port (no dual extruder without second board)
+
+**Best For**: Users comfortable with Marlin/Klipper, want automatic leveling
+
+**Approach 3: Belt-Driven Single Motor**
+**How It Works**: One motor drives both lead screws via belt
+**Cost**: $80-150 (DIY with quality components)
+
+**Pros**:
+- IMPOSSIBLE to desync (mechanically linked)
+- Reduces motor load (better efficiency)
+- No firmware changes needed
+- Most reliable long-term
+
+**Cons**:
+- More complex mechanical installation
+- Requires precision alignment of belt path
+- Higher cost for quality components
+- Harder to source parts
+
+**Best For**: Advanced DIYers, building from scratch, ultimate reliability
+
+#### DUAL Z-AXIS INSTALLATION GUIDE (Approach 1: Single Driver)
+
+**Tools Required**:
+- Allen key set (typically 2.5mm, 3mm)
+- Adjustable wrench
+- Wire cutters/strippers (if making custom cables)
+- Spirit level or digital level app
+- Calipers or ruler
+
+**Parts List (Typical Kit Contents)**:
+- 1x NEMA 17 stepper motor (42-40 or 42-48)
+- 1x Lead screw (T8, 2mm pitch, typically 365-400mm)
+- 1x Lead screw nut with anti-backlash spring
+- 1x Motor mounting bracket (aluminum)
+- 1x Top lead screw mount/bearing holder
+- 1x Y-splitter cable for Z motors
+- 2x Flexible shaft couplers (5mm to 8mm)
+- Screws and T-nuts for mounting
+
+**Step-by-Step Installation**:
+
+**STEP 1: Preparation**
+1. Power off printer, unplug from wall
+2. Remove filament, move Z-axis to mid-height
+3. Remove print bed (easier access to frame)
+4. Take photos of current wiring for reference
+
+**STEP 2: Move Power Supply** (Ender 3/Pro only, not V2)
+1. PSU is mounted where right Z motor needs to go
+2. Remove 4 screws holding PSU to frame
+3. Relocate PSU to bottom of frame or back of printer
+4. Use zip ties or printed bracket to secure
+5. Ensure wires reach comfortably, no tension
+
+**STEP 3: Install Right-Side Z Motor**
+1. Attach motor mounting bracket to stepper motor
+   - Motor connector should face to the RIGHT (away from frame)
+   - Use M3 screws, tighten firmly
+2. Slide T-nuts into right vertical extrusion slot
+3. Position bracket at same height as left motor
+4. Loosely attach bracket to frame (will align later)
+
+**STEP 4: Install Lead Screw & Coupler**
+1. Attach flexible coupler to motor shaft
+   - Align coupler so motor shaft and lead screw will be level
+   - Tighten lower set screw on motor shaft FLAT (not on round)
+2. Insert lead screw from bottom through X-gantry mount point
+3. Thread lead screw into coupler from above
+4. Leave ~1mm gap between motor shaft and lead screw in coupler
+5. Tighten upper coupler set screw
+
+**STEP 5: Install Top Lead Screw Support**
+1. Slide T-nuts into top horizontal extrusion
+2. Position bearing holder directly above lead screw
+3. Insert lead screw through bearing
+4. Tighten holder - screw should rotate freely, no wobble
+
+**STEP 6: Install Lead Screw Nut on X-Gantry**
+1. Remove existing right-side spacer/mount on X-gantry
+2. Install lead screw nut mount (usually bolts to X-gantry extrusion)
+3. Thread right lead screw into nut
+4. Ensure nut anti-backlash spring is properly compressed
+
+**STEP 7: Level X-Gantry** (CRITICAL STEP)
+⚠️ **This is the most important step - take your time!**
+
+1. **Disable stepper motors**: `M84` command or power off
+2. **Use leveling blocks method**:
+   - Stack objects to exact same height on both sides (~200mm works well)
+   - Can use stacked books, blocks, or print special calibration blocks
+   - Place blocks under X-gantry extrusion on LEFT and RIGHT
+3. **Lower gantry onto blocks**:
+   - Manually turn both lead screws to lower gantry
+   - Let gantry rest fully on blocks
+   - Gantry should now be perfectly level to FRAME (not bed!)
+4. **Verify with level**:
+   - Place spirit level on X-gantry extrusion
+   - Should be perfectly level side-to-side
+   - If not, adjust block height and repeat
+5. **Lock in position**:
+   - Do NOT move gantry from this position yet
+   - Proceed to wiring while gantry is level
+
+**STEP 8: Wiring**
+1. Locate existing Z motor cable at mainboard (Z-axis port)
+2. Unplug Z motor cable from mainboard
+3. Connect Y-splitter cable:
+   - Short end goes to mainboard Z port
+   - Two long ends go to left and right Z motors
+4. Verify both motors plugged in correctly (match connector orientation)
+5. ⚠️ DO NOT connect to E1 port - that's for dual driver setup only
+
+**STEP 9: Test Movement**
+1. Power on printer
+2. **Auto Home**: Send `G28` command
+   - Watch both motors - should turn in sync
+   - Gantry should raise smoothly, no binding
+3. **Test Z movement**:
+   - Move Z up 10mm: `G1 Z10 F500`
+   - Move Z down 5mm: `G1 Z5 F500`
+   - Should be smooth, quiet, synchronized
+4. **If motors fight each other or bind**:
+   - Power off immediately
+   - Check lead screw alignment
+   - Verify couplers not over-tightened
+   - Ensure X-gantry can slide freely on both sides
+
+**STEP 10: Final Alignment & Tightening**
+1. Move Z to mid-height position
+2. Tighten all motor bracket bolts
+3. Tighten top bearing holder bolts
+4. Check that X-gantry remains level
+5. Verify smooth movement across full Z range
+6. Tighten coupler set screws (if any loosened during testing)
+
+**STEP 11: Re-Level Bed & Calibrate**
+1. Re-install print bed
+2. Perform bed leveling (paper test or ABL)
+3. Run test print (bed level test, calibration cube)
+4. Verify improved Z-axis performance
+
+#### Dual Z Firmware Configuration (Approach 2: Independent Drivers)
+
+**For Advanced Users: Using E1 Driver Port**
+
+**Marlin Firmware Configuration**:
+
+In `Configuration_adv.h`:
+```cpp
+// Uncomment to use dual Z steppers
+#define Z_DUAL_STEPPER_DRIVERS
+
+// Define second Z driver (usually E1 port)
+#define Z2_DRIVER_TYPE TMC2208  // Match your driver type
+
+// If using auto-alignment with probe
+#define Z_STEPPER_AUTO_ALIGN
+#define Z_STEPPER_ALIGN_ITERATIONS 3
+#define Z_STEPPER_ALIGN_ACC 0.02
+
+// G34 command will now level X-gantry automatically
+```
+
+In `Configuration.h`:
+```cpp
+// Define Z2 endstop (optional, for dual endstops)
+#define Z_DUAL_ENDSTOPS
+#define Z2_USE_ENDSTOP _ZMAX_  // Or use separate endstop
+```
+
+**Pin Definitions** (Ender 3 boards):
+- Z motor: Z port (original)
+- Z2 motor: E1 port (second extruder)
+- Note: Loses second extruder capability unless using expansion board
+
+**Klipper Firmware Configuration**:
+
+In `printer.cfg`:
+```ini
+[stepper_z]
+step_pin: PB6
+dir_pin: PB5
+enable_pin: !PC3
+microsteps: 16
+rotation_distance: 8
+endstop_pin: ^PA7
+position_endstop: 0
+position_max: 250
+
+[stepper_z1]
+step_pin: PB3  # E1 stepper pins
+dir_pin: PB4
+enable_pin: !PC3
+microsteps: 16
+rotation_distance: 8
+
+[z_tilt]
+z_positions:
+  -10, 117.5  # Left Z motor position
+  250, 117.5  # Right Z motor position
+points:
+  30, 117.5   # Probe points for leveling
+  220, 117.5
+speed: 50
+horizontal_move_z: 5
+retries: 10
+retry_tolerance: 0.005
+```
+
+**Using Auto-Alignment**:
+- Marlin: `G34` command levels gantry using probe
+- Klipper: `Z_TILT_ADJUST` macro
+- Run before each print or after maintenance
+- Corrects minor desync automatically
+
+#### Dual Z Troubleshooting
+
+**Problem: Motors Fighting Each Other (Binding)**
+**Symptoms**: Stuttering, noise, skipped steps
+**Causes & Fixes**:
+1. X-gantry not level when wired
+   - Solution: Disconnect power, manually level with blocks, reconnect
+2. Lead screws not parallel
+   - Solution: Loosen mounts, ensure vertical extrusions are square
+3. Couplers over-tightened
+   - Solution: Loosen slightly, maintain 1mm gap
+4. Lead screw nuts over-constrained
+   - Solution: Ensure nuts have slight play, not rigidly mounted
+
+**Problem: Gantry Becomes Unlevel Over Time (Single Driver)**
+**Symptoms**: One side higher after power loss or manual movement
+**Causes & Fixes**:
+1. Motors desynced during power-off movement
+   - Solution: Re-level using block method (Step 7 above)
+2. One lead screw tighter than other
+   - Solution: Lubricate both screws evenly, check for binding
+3. Uneven wear
+   - Solution: Inspect couplers, nuts, bearings for damage
+
+**Problem: Auto-Alignment Fails (Dual Driver)**
+**Symptoms**: G34 error, exceeds retry limit
+**Causes & Fixes**:
+1. Z_STEPPER_ALIGN_ACC tolerance too tight
+   - Solution: Increase to 0.05mm in firmware
+2. Probe repeatability poor
+   - Solution: Check probe mounting, clean nozzle, use `M48` to test
+3. Mechanical binding preventing adjustment
+   - Solution: Loosen all Z-axis hardware slightly, ensure free movement
+
+**Problem: Z-Banding Still Present After Upgrade**
+**Symptoms**: Visible layer inconsistencies
+**Causes & Fixes**:
+1. Lead screws bent or poor quality
+   - Solution: Replace with quality T8 lead screws
+2. Couplers rigid instead of flexible
+   - Solution: Use spring-loaded or flexible couplers, not solid
+3. Problem not related to Z-axis (actually extruder inconsistency)
+   - Solution: Calibrate e-steps, check for extruder clicking
+
+#### DIY Belt-Driven Dual Z (Advanced)
+
+**Parts List**:
+- 1x NEMA 17 or 23 stepper motor
+- 1x 30:1 worm gear reducer (OnDrives Rino or similar) ~$100
+- 2x T8 lead screws with nuts
+- 2x 36-tooth HTD-3M pulleys (for motor and idler)
+- 1x HTD-3M belt (10mm wide, steel core, length depends on printer)
+- Mounting brackets (custom designed, print in PETG or ABS)
+- Bearings for belt tensioning
+
+**Key Design Considerations**:
+- Worm gear prevents bed drop on power loss (30:1 reduction)
+- Belt must be tensioned properly (use tensioner pulley)
+- Both lead screws mechanically synchronized - CANNOT desync
+- Motor placement usually at bottom or top rear
+- More complex to design and install than direct drive
+
+**Benefits**: Ultimate reliability, no desync possible, better efficiency
+**Drawbacks**: Complex design, higher cost, requires CAD skills or existing design
+
 ## Communication Guidelines:
 
 1. **Assess User's Technical Level**: Ask about their experience early

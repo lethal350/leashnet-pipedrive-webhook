@@ -29,7 +29,16 @@ A specialized Claude AI agent focused on diagnosing, troubleshooting, and repair
   - IDEX tool offset calibration
 
 - **Maintenance Schedules**: Preventive maintenance recommendations to avoid common issues
-- **Upgrade Recommendations**: Cost-effective upgrade paths based on use case
+- **Hardware Upgrade Guidance**:
+  - Priority-based upgrade paths (reliability → quality → speed)
+  - Budget-conscious recommendations by use case
+  - Specific product recommendations with pros/cons
+  - When to upgrade (and when NOT to)
+- **Dual Z-Axis Conversion**:
+  - Complete step-by-step installation guide
+  - 3 approaches compared (single driver, dual driver, belt-driven)
+  - Firmware configuration (Marlin & Klipper)
+  - Troubleshooting common issues
 - **Conversation History**: Export and load diagnostic sessions for documentation
 
 ## Prerequisites
@@ -185,12 +194,14 @@ This will run through several example scenarios:
 leashnet-pipedrive-webhook/
 ├── agents/
 │   ├── __init__.py                      # Package initialization
-│   └── printer_maintenance_agent.py     # Main agent implementation
+│   └── printer_maintenance_agent.py     # Main agent implementation (1125 lines)
 ├── cli.py                                # Interactive CLI interface
 ├── requirements.txt                      # Python dependencies
 ├── .env.example                          # Environment variables template
 ├── .gitignore                            # Git ignore rules
-└── README.md                             # This file
+├── README.md                             # This file
+├── HARDWARE_DIAGNOSTICS.md              # Hardware diagnostic capabilities documentation
+└── UPGRADE_GUIDE.md                     # Complete hardware upgrade and dual Z-axis guide
 ```
 
 ## Agent Capabilities
