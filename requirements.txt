@@ -1,0 +1,19 @@
+# 3D Printer Maintenance Agent Dependencies
+
+# Core dependency for Claude API
+anthropic>=0.39.0
+
+# Optional: For web interface or API endpoints
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# Optional: For enhanced CLI interface
+click>=8.1.0
+rich>=13.7.0
+
+# Optional: For data persistence
+python-dotenv>=1.0.0
+
+# Optional: For testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
