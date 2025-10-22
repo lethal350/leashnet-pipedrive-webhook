@@ -195,6 +195,12 @@ leashnet-pipedrive-webhook/
 ├── agents/
 │   ├── __init__.py                      # Package initialization
 │   └── printer_maintenance_agent.py     # Main agent implementation (1125 lines)
+├── training/                             # Virtual training environment
+│   ├── __init__.py                      # Training package init
+│   ├── virtual_printer.py               # Printer simulator with realistic physics
+│   ├── train_agent.py                   # Training orchestrator
+│   ├── scenario_database.py             # Real-world scenario database (12 scenarios)
+│   └── README.md                        # Training system documentation
 ├── cli.py                                # Interactive CLI interface
 ├── requirements.txt                      # Python dependencies
 ├── .env.example                          # Environment variables template
@@ -438,14 +444,55 @@ For issues, questions, or suggestions:
 ## Roadmap
 
 Planned features:
-- [ ] Web interface with Flask
-- [ ] Multi-language support
-- [ ] Image analysis for visual diagnostics
+- [x] Web interface with Flask
+- [x] Multi-language support
+- [x] Image analysis for visual diagnostics
 - [ ] Firmware configuration generator
 - [ ] Print failure prediction
 - [ ] Integration with OctoPrint/Klipper logs
 - [ ] Video tutorial links for complex procedures
 - [ ] Community knowledge base contributions
+- [x] **Virtual Training Environment** - Agent can practice with thousands of scenarios
+
+## Virtual Training Environment
+
+The agent includes a comprehensive training system where it can practice diagnosing and solving thousands of realistic 3D printer problems through simulation.
+
+### Features
+
+- **Realistic Printer Simulation**: Virtual printers with accurate physics and component wear
+- **Scenario Generation**: Automatic creation of diverse troubleshooting scenarios
+- **Performance Evaluation**: Automated scoring across 4 categories (100-point scale)
+- **Real-World Database**: 12 curated scenarios from actual community reports
+- **Progressive Training**: Easy → Medium → Hard difficulty progression
+- **Analytics Dashboard**: Detailed performance metrics and improvement tracking
+
+### Quick Start
+
+```bash
+# Run training session
+python training/train_agent.py
+
+# Training modes:
+# 1. Single Scenario - Interactive walkthrough
+# 2. Small Batch - 10 scenarios (~15 minutes)
+# 3. Progressive Training - Structured learning path
+# 4. Stress Test - 100+ scenarios for comprehensive evaluation
+```
+
+### Training Results
+
+The agent is evaluated on:
+- **Problem Identification** (40 pts): Correctly identifying all issues
+- **Root Cause Analysis** (30 pts): Finding root causes, not just symptoms
+- **Solution Quality** (20 pts): Providing comprehensive repair steps
+- **Communication** (10 pts): Clear, helpful, user-friendly responses
+
+**Grades**: A (90-100), B (80-89), C (70-79), D (60-69), F (<60)
+
+**Target**: 200-300 scenarios with 85+ average for production readiness
+
+See `training/README.md` for complete documentation.
 
 ---
 
