@@ -5,7 +5,10 @@ A specialized Claude AI agent focused on diagnosing, troubleshooting, and repair
 ## Features
 
 - **Intelligent Problem Diagnosis**: Analyzes symptoms to identify root causes with multiple potential solutions ranked by likelihood
-- **Comprehensive Knowledge Base**: Deep expertise in Ender 3, Ender 3 Pro, Ender 3 V2, CR-10, and similar Cartesian FDM printers
+- **Multi-Architecture Support**:
+  - **Cartesian Printers**: Ender 3, 3 Pro, 3 V2, CR-10 series (Primary expertise)
+  - **CoreXY Printers**: Voron, Hypercube, BLV MGN (Advanced knowledge)
+  - **IDEX Systems**: Dual extruder calibration and multi-material printing
 - **Step-by-Step Repair Guidance**: Clear, detailed instructions tailored to user's technical level
 - **Common Issues Covered**:
   - Under-extrusion and over-extrusion
@@ -16,6 +19,14 @@ A specialized Claude AI agent focused on diagnosing, troubleshooting, and repair
   - Calibration (bed leveling, e-steps, PID tuning)
   - Mechanical and electrical troubleshooting
   - Firmware configuration
+- **Hardware-Specific Diagnostics**:
+  - V-slot wheel and eccentric nut adjustment
+  - Belt tensioning (Cartesian and CoreXY-specific)
+  - Stepper motor and driver diagnosis
+  - Power supply and mainboard troubleshooting
+  - BLTouch/CR Touch sensor problems
+  - Heat creep and PTFE degradation
+  - IDEX tool offset calibration
 
 - **Maintenance Schedules**: Preventive maintenance recommendations to avoid common issues
 - **Upgrade Recommendations**: Cost-effective upgrade paths based on use case
@@ -201,9 +212,15 @@ The agent uses a systematic diagnostic process:
 | **Under-Extrusion** | Thin layers, gaps, weak prints | Clogged nozzle, wrong e-steps, low temp |
 | **Bed Adhesion** | First layer not sticking | Unlevel bed, wrong Z-offset, dirty surface |
 | **Layer Shifting** | Offset layers, skewed prints | Loose belts, loose pulleys, speed too high |
+| **Layer Shifting (CoreXY)** | **Diagonal** shifts/skew | Unequal belt tension, belt desync |
 | **Stringing** | Thin strings between parts | Poor retraction, temp too high, wet filament |
 | **Clogs** | No extrusion, clicking | Partial clog, heat creep, debris |
-| **Quality Issues** | Blobs, zits, ringing | Speed/accel settings, mechanical issues |
+| **Quality Issues** | Blobs, zits, ringing, VFAs | Speed/accel settings, mechanical issues |
+| **Binding/Grinding** | Resistance, noise when moving | Over-tightened eccentric nuts, worn wheels |
+| **Power Issues** | No power or intermittent | Failed PSU, blown fuse, mainboard voltage regulator |
+| **Sensor Failures** | BLTouch won't deploy/trigger | Wiring (C7 capacitor), firmware config, pin stuck |
+| **Heat Creep** | Clogs above melt zone | Insufficient cooling, all-metal hotend issues |
+| **IDEX Misalignment** | Dual colors don't line up | Tool offset miscalibration, thermal expansion |
 
 ### Calibration Procedures
 
@@ -215,14 +232,57 @@ The agent can guide you through:
 - **PID Tuning**: Stable temperature control
 - **Retraction Settings**: Eliminating stringing and oozing
 - **Acceleration/Jerk**: Improving print quality and speed
+- **IDEX Tool Offsets**: X, Y, Z calibration for dual extruders
+- **Belt Tension**: Frequency measurement (110Hz Cartesian, equal tension CoreXY)
+
+### Hardware Diagnostic Capabilities
+
+The agent provides expert-level hardware troubleshooting:
+
+**Mechanical Systems:**
+- V-slot wheel adjustment and eccentric nut tensioning
+- Belt tension diagnosis (including CoreXY dual-belt synchronization)
+- Binding and grinding noise troubleshooting
+- Axis wobble and loose component identification
+
+**Electrical Systems:**
+- Power supply voltage testing and fuse diagnosis
+- Mainboard failure detection (voltage regulator, driver failures)
+- Stepper motor testing and driver current (Vref) adjustment
+- Wiring and connector troubleshooting
+
+**Sensor Systems:**
+- BLTouch/CR Touch installation and firmware configuration
+- C7 capacitor interference diagnosis on Creality boards
+- Signal inversion issues and pin configuration
+- Endstop and probe mounting problems
+
+**Thermal Systems:**
+- Heat creep diagnosis and cooling solutions
+- PTFE tube degradation detection (temperature limits, toxic fume warnings)
+- All-metal hotend configuration and heat break selection
+- Hotend assembly and PTFE-to-nozzle gap problems
+
+**CoreXY-Specific:**
+- Diagonal layer shift diagnosis (belt desync)
+- Belt frequency matching (within 1-2Hz)
+- VFA (Vertical Fine Artifact) troubleshooting
+- Belt routing and motor synchronization verification
+
+**IDEX-Specific:**
+- Three-axis tool offset calibration (X, Y, Z)
+- Carriage collision prevention
+- Ooze and stringing management with standby temperatures
+- Mechanical alignment and thermal expansion compensation
 
 ### Safety Features
 
 The agent always includes appropriate safety warnings for:
 - Hot components (200-260°C)
-- Electrical hazards
+- Electrical hazards (PSU, mainboard work)
 - Moving parts
 - Firmware modifications
+- PTFE toxic fume risks above 250°C
 
 ## Advanced Usage
 
