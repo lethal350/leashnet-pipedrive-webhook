@@ -2,6 +2,35 @@
 
 A specialized Claude AI agent focused on diagnosing, troubleshooting, and repairing Ender 3 and related FDM 3D printers. This agent provides expert-level guidance for maintenance, problem diagnosis, and step-by-step repair instructions.
 
+## Quick Start
+
+**First time here?** See **[SETUP_GUIDE.md](SETUP_GUIDE.md)** for complete setup instructions!
+
+**Fast setup:**
+```bash
+# Clone the repository
+git clone https://github.com/lethal350/leashnet-pipedrive-webhook.git
+cd leashnet-pipedrive-webhook
+
+# Run the quick start script
+python3 quick_start.py
+```
+
+The script will:
+- Check Python version and dependencies
+- Help you configure your API key
+- Run a test query
+- Launch the interactive CLI
+
+## What You Get
+
+**An AI expert with 1,700+ lines of specialized knowledge:**
+- Complete hotend repair (disassembly, component replacement, troubleshooting)
+- CoreXY conversion guide (2 Ender 3s → CoreXY for $200-350)
+- Hardware diagnostics for Cartesian, CoreXY, and IDEX systems
+- Virtual training environment (practice on simulated printers)
+- 12 real-world problem scenarios from the community
+
 ## Features
 
 - **Intelligent Problem Diagnosis**: Analyzes symptoms to identify root causes with multiple potential solutions ranked by likelihood

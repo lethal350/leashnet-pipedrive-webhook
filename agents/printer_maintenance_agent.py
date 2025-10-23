@@ -419,6 +419,657 @@ M500             ; Save settings
 3. Increase print speed slightly (less heat soak time)
 4. Consider bi-metal heat break (better thermal isolation)
 
+## COMPREHENSIVE HOTEND REPAIR & TROUBLESHOOTING:
+
+### Complete Hotend Disassembly Guide
+
+**⚠️ SAFETY FIRST**:
+- Allow hotend to cool completely (wait 30+ minutes) OR
+- If hot disassembly needed, work at 240°C and use heat-resistant gloves
+- Disconnect power before touching electrical connections
+- Never apply force - if stuck, heat more and try again
+
+**Tools Needed**:
+- 7mm socket or adjustable wrench (nozzle)
+- Needlenose pliers or 5.5mm wrench (heat break on some models)
+- 1.5mm hex key (heat sink screws)
+- 2.5mm hex key (heater block set screws)
+- Wire cutters/strippers (if replacing thermistor/heater)
+- Thermal paste (optional but recommended for thermistor)
+
+**Stock Ender 3 MK8-style Hotend Disassembly** (Step-by-Step):
+
+1. **Preparation**:
+   - Home printer, heat to 240°C (softens any plastic in threads)
+   - Unload filament completely
+   - Power off and unplug after reaching temp OR continue hot (safer for stuck parts)
+
+2. **Remove Cooling Shroud**:
+   - Remove 2-3 screws holding part cooling fan shroud
+   - Disconnect fan connector if needed
+   - Set aside carefully
+
+3. **Remove Heat Sink Fan**:
+   - Remove 2 screws holding 4010 fan to heat sink
+   - Disconnect fan from mainboard (note polarity: red=+, black=-)
+   - **Critical**: This fan MUST run whenever hotend is hot - test before reassembly
+
+4. **Remove Bowden Tube** (if Bowden setup):
+   - Push down blue clip on pneumatic coupler
+   - Pull PTFE tube straight out (may need to heat if stuck)
+   - Inspect tube end - should be perfectly square cut and clean
+
+5. **Disconnect Wiring**:
+   - **Thermistor**: Gently disconnect 2-pin white connector (very fragile!)
+   - **Heater Cartridge**: Disconnect 2-pin red/black connector
+   - Take photo of wire routing for reassembly reference
+
+6. **Remove Nozzle** (CRITICAL STEP):
+   - **Hot Method** (recommended): At 240°C, use 7mm socket
+   - **Cold Method**: Risk of breaking heat block threads
+   - Turn counter-clockwise (standard righty-tighty)
+   - **DO NOT force** - if stuck, heat more or soak in acetone overnight
+   - Remove completely and set aside
+
+7. **Remove Heat Block from Heat Sink**:
+   - Locate grub screws (set screws) on heat block holding heat break
+   - Loosen grub screws with 2.5mm hex (DON'T fully remove)
+   - Heat block should slide down off heat break
+   - If stuck: heat to 240°C and gently wiggle while pulling
+
+8. **Remove Heat Break from Heat Sink**:
+   - Some models: Heat break is threaded into heat sink (turn counter-clockwise)
+   - Some models: Heat break is pressed in (pull straight out)
+   - Ender 3 stock: Usually pressed fit with M6 thread
+   - Clean threads with brass brush if replacing
+
+9. **Remove Thermistor from Heat Block**:
+   - Locate small set screw on side of heat block (often 1.5mm hex)
+   - Loosen carefully (screw is soft and strips easily)
+   - Gently slide thermistor cartridge out
+   - **WARNING**: Glass bead thermistors are EXTREMELY fragile
+
+10. **Remove Heater Cartridge**:
+    - Locate set screw securing heater cartridge (usually 2.5mm hex)
+    - Loosen set screw fully
+    - Slide heater cartridge out (may need gentle wiggling)
+    - **DO NOT pull by wires** - grip the metal cartridge only
+
+**Inspection After Disassembly**:
+- **Nozzle**: Look for damage, clogs, stripped threads, wear on brass tip
+- **Heat Break**: Check for filament buildup in throat, damaged PTFE liner (if lined)
+- **Heat Block**: Check threads for damage, look for filament leaks
+- **Thermistor**: Check glass bead for cracks, wires for damage near heat
+- **Heater Cartridge**: Check resistance (should be 12-16Ω for 24V, 3-4Ω for 12V)
+- **PTFE Tube**: Check if cut is square, look for burned/browned ends
+- **Heat Sink**: Check fins for dust buildup, threads for damage
+
+### Hotend Reassembly Guide
+
+**CRITICAL ASSEMBLY ORDER** (Stock Ender 3):
+
+1. **Install Heat Break into Heat Sink**:
+   - If threaded: Apply small amount of high-temp anti-seize to threads
+   - Thread in by hand first, then tighten with wrench (don't overtighten!)
+   - If press-fit: Push in firmly until seated
+
+2. **Install Thermistor into Heat Block**:
+   - **Best Practice**: Apply tiny amount of thermal paste to thermistor tip
+   - Insert thermistor into smaller hole in heat block (not the heater hole!)
+   - Push until fully seated (tip should touch bottom of hole)
+   - Tighten set screw GENTLY - just enough to hold (over-tightening cracks glass bead)
+   - **Torque**: Finger-tight plus 1/4 turn maximum
+
+3. **Install Heater Cartridge into Heat Block**:
+   - Insert into larger hole in heat block
+   - Push fully in (should be flush or slightly recessed)
+   - Tighten set screw firmly (more force than thermistor, but don't strip)
+   - Wiggle test - cartridge should NOT move
+
+4. **Install Nozzle into Heat Block** (PROPER PROCEDURE):
+   - **At Room Temperature**: Thread nozzle in by hand until it stops
+   - **Back off 1/4 turn** (this is critical!)
+   - Slide heat block onto heat break (nozzle still loose!)
+   - Ensure nozzle threads engage with heat break inside heat block
+   - Tighten heat block set screws to hold heat break LIGHTLY
+
+5. **CRITICAL: Hot Tightening**:
+   - Heat hotend to 240°C with everything assembled
+   - Hold heat sink with pliers (it gets hot!)
+   - Tighten nozzle firmly with 7mm wrench while hot
+   - This ensures tight seal between nozzle and heat break
+   - **Why this matters**: Cold tightening leaves gaps that leak filament when hot
+
+6. **Install PTFE Tube** (Bowden):
+   - Cut PTFE tube with tubing cutter (perfectly square cut is critical!)
+   - Push firmly into pneumatic coupler until it stops
+   - Should bottom out against nozzle when heat block is tightened
+   - Push down blue clip and check tube doesn't pull out easily
+
+7. **Reconnect Wiring**:
+   - Thermistor: Connect 2-pin white connector (can be either way usually)
+   - Heater: Connect red/black (polarity doesn't matter for resistive heater)
+   - Verify wires have slack and won't be pulled when toolhead moves
+
+8. **Install Heat Sink Fan**:
+   - Mount 4010 fan with airflow pointing AT heat sink fins (blowing through)
+   - Connect to mainboard (red=+, black=-, don't reverse!)
+   - **Test before closing**: Power on and verify fan spins
+
+9. **Install Cooling Shroud**:
+   - Position shroud directing airflow at nozzle tip
+   - Tighten screws snugly but don't overtighten plastic
+
+10. **First Heat Test**:
+    - Heat to 200°C and watch temperature reading
+    - Should climb steadily and stabilize at 200°C ± 3°C
+    - If temperature reading drops: thermistor loose or damaged
+    - If won't heat: heater cartridge loose or bad connection
+    - If temperature reading shows 0 or -14°C: thermistor disconnected
+    - If temperature reading shows maxtemp error: thermistor shorted
+
+### Component Replacement Procedures
+
+#### Replacing Thermistor
+
+**When to Replace**:
+- Shows "mintemp" or "maxtemp" errors
+- Temperature reading is 0, -14, or 999°C
+- Erratic temperature fluctuations (±10-20°C)
+- Physical damage to wires or glass bead
+
+**Types of Thermistors**:
+- **100K NTC** (most common): Negative temperature coefficient, 100kΩ at 25°C
+- **100K B3950**: Standard Ender 3 type (set as thermistor type 1 in Marlin)
+- **PT100/PT1000**: High precision, requires special board (thermistor type 20)
+- **Thermocouple**: K-type, requires special board/amplifier
+
+**Replacement Procedure**:
+1. Heat hotend to 240°C (makes heat block easier to handle)
+2. Power off and disconnect thermistor wires
+3. Loosen thermistor set screw (1.5mm or 2mm hex)
+4. Carefully pull out old thermistor
+5. Clean thermistor hole with cotton swab
+6. Apply tiny dab of thermal paste to NEW thermistor bead (optional but helps)
+7. Insert new thermistor fully into hole
+8. **GENTLY** tighten set screw - just snug, not tight! (over-tightening breaks glass bead)
+9. Connect wires (usually polarity doesn't matter for thermistors)
+10. Test: Heat to 200°C, verify stable reading
+
+**Securing Thermistor Wires** (Critical for longevity):
+- Use kapton tape to secure wires to heat block
+- Ensure no tension on wires at connection point
+- Route wires away from moving parts
+- Most thermistor failures are from wire breakage at heat block
+
+**Testing Thermistor**:
+- At room temp (~25°C): Should read ~100kΩ resistance
+- Measure with multimeter between two wires (disconnect from board)
+- If open circuit (infinite resistance): Thermistor broken
+- If near-zero resistance: Thermistor shorted
+
+#### Replacing Heater Cartridge
+
+**When to Replace**:
+- Won't heat at all (check connections first!)
+- Heats very slowly
+- Thermal runaway errors (can also be thermistor or PID)
+- Physical damage or corrosion
+- Measured resistance out of spec
+
+**Heater Cartridge Specifications**:
+- **Voltage**: MUST match your PSU (12V or 24V) - mixing will destroy heater or board!
+- **Wattage**: 40W (standard), 50W, or 60W (higher = faster heating)
+- **Size**: 6mm diameter × 20mm length (standard MK8)
+- **Resistance Check**:
+  - 24V 40W: Should measure ~14-15Ω
+  - 12V 40W: Should measure ~3.6Ω
+  - Formula: R = V² / W (e.g., 24² / 40 = 14.4Ω)
+
+**Replacement Procedure**:
+1. **Verify correct voltage before installing!** (24V is most common on modern Ender 3s)
+2. Power off completely and disconnect heater wires
+3. Heat block should be warm (easier to work with) but not necessary
+4. Loosen heater set screw completely (2.5mm hex)
+5. Slide out old heater cartridge (may need gentle wiggling)
+6. Insert new heater cartridge fully into hole (should be flush or slightly in)
+7. Align wire exit away from nozzle and toward back
+8. Tighten set screw firmly (more force than thermistor, but don't strip threads)
+9. Wiggle test - cartridge should not move at all
+10. Connect wires (polarity doesn't matter for resistive heater)
+11. **Test**: Power on, heat to 100°C slowly, verify heating works
+
+**Testing Heater Cartridge**:
+- Disconnect from board, measure resistance between two wires
+- 24V system: Should read 12-16Ω depending on wattage
+- 12V system: Should read 3-5Ω depending on wattage
+- If open circuit (infinite): Heater broken
+- If short (near zero): Heater shorted (dangerous - replace!)
+
+**Safety Warning**:
+- ⚠️ NEVER run heater without thermistor connected - fire hazard!
+- ⚠️ Installing wrong voltage (12V heater on 24V system) = instant burnout
+- ⚠️ Installing wrong voltage (24V heater on 12V system) = won't heat properly
+
+#### Replacing Nozzle
+
+**When to Replace**:
+- Tip is worn/enlarged (affects print quality)
+- Threads damaged (won't tighten properly)
+- Clog cannot be cleared
+- Switching materials (dedicated nozzles for abrasives)
+- Upgrading size (0.4mm → 0.6mm for faster prints)
+
+**Nozzle Types & Materials**:
+- **Brass**: Standard, best thermal conductivity, wears with abrasives
+- **Hardened Steel**: For carbon fiber/glow/wood filaments, slightly worse thermal
+- **Stainless Steel**: Mid-range hardness, good for PETG
+- **Ruby/Sapphire Tip**: Premium, extremely wear-resistant
+- **Plated Brass** (nickel/chrome): Non-stick, good for sticky filaments
+
+**Nozzle Specifications**:
+- **Thread**: M6 (standard) - verify before ordering!
+- **Length**: ~13mm for MK8, ~12.5mm for E3D V6
+- **Orifice**: 0.2mm, 0.3mm, 0.4mm (standard), 0.6mm, 0.8mm, 1.0mm+
+- **Special**: CHT (high flow), volcano (long melt zone)
+
+**Proper Nozzle Change Procedure** (HOT METHOD - Recommended):
+
+1. Heat hotend to 240°C (PLA) or 260°C (PETG/ABS residue)
+2. Retract filament completely and unload
+3. **Use 7mm socket wrench** (not adjustable wrench - rounds hex!)
+4. Hold heat block with pliers/wrench (keeps from rotating)
+5. Turn nozzle counter-clockwise (standard thread)
+6. Remove nozzle completely
+7. Quickly clean nozzle hole in heat block with brass brush
+8. Thread new nozzle in BY HAND until it stops
+9. **BACK OFF 1/4 turn** (critical step!)
+10. **While still at 240°C**, tighten nozzle firmly with wrench
+11. This hot-tightening creates proper seal with heat break
+
+**Why Back Off 1/4 Turn?**
+- Nozzle doesn't seal against heat block threads
+- It seals against heat break inside the heat block
+- 1/4 turn back-off ensures heat break has room to seat when tightened hot
+- Skipping this causes filament leaks between nozzle and heat break
+
+**COLD Nozzle Change** (Not Recommended):
+- Risk: Thermal expansion means cold-tight = hot-loose
+- Result: Filament leaks, clogs at nozzle/heat break junction
+- Only use if hotend cannot heat
+
+**After Nozzle Change**:
+1. Extrude 20-30mm of filament to purge old material
+2. Check for leaks around nozzle threads (should be none)
+3. Re-level bed (nozzle height may have changed slightly)
+4. Verify extrusion is smooth and consistent
+
+#### Replacing Heat Break
+
+**When to Replace**:
+- Threads damaged (won't tighten or cross-threaded)
+- PTFE liner degraded (in PTFE-lined heat breaks)
+- Persistent clogs in heat break throat
+- Upgrading to bi-metal or all-metal heat break
+
+**Heat Break Types**:
+- **PTFE-Lined** (stock Ender 3): Good for PLA, limited to ~240°C
+- **All-Metal** (E3D V6 style): High-temp capable but needs good cooling
+- **Bi-Metal** (titanium/copper): Best thermal break, premium option
+- **Threads**: M6 or M7 (verify your hotend model!)
+
+**Replacement Procedure**:
+1. Disassemble hotend completely (follow disassembly guide above)
+2. Remove old heat break from heat sink (unscrew or pull out depending on type)
+3. Clean heat sink threads with brass brush and IPA
+4. Apply HIGH-TEMP anti-seize to heat break threads (never regular grease!)
+5. Thread new heat break into heat sink BY HAND first
+6. Tighten with wrench (snug but don't overtighten - can crack heat sink)
+7. Reassemble hotend following reassembly guide
+8. **CRITICAL**: Must do hot nozzle tightening at 240°C!
+
+**PTFE-Lined Heat Break Maintenance**:
+- PTFE liner should be replaced every 6-12 months
+- Some heat breaks have removable PTFE (E3D V6 clone)
+- Some are bonded (need full heat break replacement)
+- Signs of degradation: brown color, chemical smell, clogs
+
+### Hotend-Specific Troubleshooting
+
+#### Stock Ender 3 MK8 Hotend
+
+**Common Issues**:
+
+1. **PTFE Tube Gap** (MOST COMMON):
+   - Symptom: Random clogs, under-extrusion, filament leaking from top of heat block
+   - Cause: PTFE tube not seated flush against nozzle
+   - Fix: Disassemble, trim 2mm off PTFE tube (fresh square cut), reassemble ensuring tube bottoms out
+   - Prevention: Use Capricorn tubing (more heat resistant)
+
+2. **Bowden Coupler Failure**:
+   - Symptom: PTFE tube pulls out during retractions, clicking noise
+   - Cause: Plastic coupler teeth worn out
+   - Fix: Replace pneumatic coupler ($2-5)
+   - Upgrade: Metal all-metal couplers or clip-on locking ring
+
+3. **Temperature Limit** (240°C):
+   - PTFE starts degrading above 240°C
+   - Don't print ABS, Nylon, or high-temp PETG on stock hotend
+   - Upgrade to all-metal hotend for 250°C+ materials
+
+4. **Heat Sink Fan Failure**:
+   - CRITICAL: If this fan stops, heat creep clogs occur within minutes
+   - Test: Should spin whenever printer powered on (24V fans) or when hotend >50°C
+   - Replacement: 4010 24V fan, 0.1A minimum (higher CFM = better)
+
+#### E3D V6 / Clone Hotends
+
+**Common Issues**:
+
+1. **Heat Creep with PLA**:
+   - All-metal heat break allows more heat to travel up
+   - Solution: Upgrade to 5000+ RPM heat sink fan
+   - Solution: Reduce retraction to 2-3mm
+   - Solution: Enable "retract at layer change" instead of mid-print
+
+2. **Nozzle Length Mismatch**:
+   - E3D V6 nozzles are SHORTER than MK8
+   - Using MK8 nozzle in V6 = gap = leaks = clogs
+   - Always use V6-specific nozzles
+
+3. **Heat Block Rotation**:
+   - Set screw loosens from vibration
+   - Symptom: Heat block rotates, wires get twisted
+   - Fix: Loctite on heat break threads (high-temp formulation)
+   - Check: Tighten set screw regularly
+
+4. **Thermistor Cartridge Fallout**:
+   - E3D uses cartridge thermistor (not glass bead)
+   - Can slip out if set screw loosens
+   - Symptom: Sudden mintemp error mid-print
+   - Prevention: Small dab of thermal paste helps hold it
+
+#### Microswiss All-Metal Hotend
+
+**Common Issues**:
+
+1. **Heat Creep with PLA** (common on all-metal):
+   - Symptoms: Clogs when printing PLA slowly or with many retractions
+   - Solution: Print PLA at higher speeds (60mm/s minimum)
+   - Solution: Reduce retraction distance to 1-2mm
+   - Solution: Increase heat sink fan speed
+
+2. **Retraction Settings**:
+   - All-metal needs LESS retraction than PTFE-lined
+   - Start: 1.5mm retraction, 25mm/s speed
+   - Increase only if stringing occurs
+   - Too much retraction = heat creep clogs
+
+3. **Oozing at Temperature**:
+   - All-metal has less friction than PTFE
+   - Filament can ooze more easily
+   - Solution: Enable "retract on layer change"
+   - Solution: Lower idle temperature by 5°C
+
+#### High-Flow Hotends (Volcano, Dragon, Rapido, CHT)
+
+**Purpose**:
+- Melt more filament per second
+- Enable faster printing (150+ mm/s with thick lines)
+- Required for large nozzles (0.8mm+)
+
+**CHT (High Flow) Nozzles**:
+- 3 internal channels vs 1 = triple melt zone contact
+- Can flow 2-3x more than standard nozzle
+- Drop-in upgrade for standard hotends
+- Cost: $15-25 vs $5 for brass
+
+**Volcano Hotends**:
+- Extra-long melt zone (heater block is longer)
+- Requires VOLCANO-specific nozzles (longer throat)
+- Cannot use standard nozzles (won't reach!)
+- Great for 0.8mm+ nozzles and vase mode
+
+**Common Issues**:
+
+1. **Wrong Nozzle Type**:
+   - Using standard nozzle in Volcano = nozzle doesn't seal
+   - Using Volcano nozzle in standard = nozzle sticks out too far
+   - ALWAYS verify nozzle type matches hotend
+
+2. **Increased Oozing**:
+   - Larger melt zone = more molten plastic = more ooze
+   - Increase retraction by 0.5-1mm vs standard
+   - Enable z-hop and combing
+
+3. **Temperature Tuning**:
+   - May need LOWER temps than standard hotend (more time in melt zone)
+   - Start 5-10°C lower and test
+   - PLA: Try 200°C instead of 210°C
+
+### Advanced Clog Diagnosis
+
+**Where is the Clog?** (Critical to know before fixing)
+
+**Test 1: Manual Push Test**
+- Heat to printing temp
+- Try pushing filament by hand
+- **If won't push at all**: Clog in cold end or heat break
+- **If pushes but no extrusion**: Clog in nozzle
+- **If pushes with high force**: Partial nozzle clog
+
+**Test 2: Remove Nozzle Test**
+- Heat to 240°C
+- Remove nozzle completely
+- Try pushing filament through
+- **If flows freely**: Clog was in nozzle (replace/clean nozzle)
+- **If still won't push**: Clog in heat break or cold end
+
+**Test 3: Location Mapping**
+
+**Clog in NOZZLE** (80% of clogs):
+- Symptoms: Extruder clicks, filament won't push through nozzle
+- Causes: Partial burn (PLA carbonization), foreign material, heat creep
+- Fix: Cold pull, needle poke from bottom, or replace nozzle
+
+**Clog in HEAT BREAK** (15% of clogs):
+- Symptoms: Filament jams above nozzle, extruder clicks, soft filament in cold end
+- Causes: Heat creep, PTFE degradation, gap between PTFE and nozzle
+- Fix: Disassemble hotend, clean heat break throat, reseat PTFE
+- Prevention: Ensure heat sink fan working, reduce retraction
+
+**Clog in COLD END / Extruder** (5% of clogs):
+- Symptoms: Filament won't even enter hotend, grinding at extruder
+- Causes: Filament path obstruction, broken PTFE tube, foreign object
+- Fix: Remove Bowden tube, check for obstructions, replace damaged tube
+
+**Material-Specific Clogs**:
+
+**PLA Carbonization**:
+- Cause: PLA left in hotend at 200°C+ for extended time (hours)
+- Symptom: Black charred material, burnt smell
+- Fix: Heat to 240°C, try pushing through to purge carbon
+- Prevention: Don't leave PLA hotend heated for long idle times
+
+**PETG Stringing Clog**:
+- Cause: PETG strings retract and jam in heat break
+- Symptom: Starts fine, clogs after minutes of printing
+- Fix: Cold pull with PLA, or disassemble and clean
+- Prevention: Reduce retraction distance, increase retraction speed
+
+**TPU/Flexible Jam**:
+- Cause: Flexible filament buckles in Bowden tube or extruder
+- Symptom: Filament coils inside extruder, won't feed
+- Fix: Disassemble extruder, remove coiled filament
+- Prevention: Use direct drive for TPU, or print very slowly (20mm/s)
+
+**Wet Filament Clogs**:
+- Cause: Water in filament vaporizes, creates bubbles/steam in nozzle
+- Symptom: Popping sounds, inconsistent extrusion, steam from nozzle
+- Fix: Dry filament at 45-55°C for 4-6 hours
+- Prevention: Store filament with desiccant
+
+### Heat Sink Fan Critical Importance
+
+**Function**: Cools heat sink to prevent heat from traveling up into cold end
+
+**Failure Symptoms**:
+- Clogs occurring shortly after print start (5-15 minutes)
+- Extruder motor housing becomes hot to touch
+- Soft/melted filament visible above heat break
+- Extruder clicking even though nozzle is clear
+
+**Fan Testing**:
+1. Visual: Should spin whenever printer is powered on OR when hotend > 50°C
+2. Airflow: Feel air blowing through heat sink fins
+3. Speed: Should be full speed (no PWM control on this fan)
+4. Bearing noise: Grinding or clicking sound = failing bearing
+
+**Replacement Specifications**:
+- **Size**: 40mm × 40mm × 10mm (4010 fan)
+- **Voltage**: 24V for Ender 3 V2/S1 (12V for older Ender 3)
+- **Current**: 0.1A minimum (higher = better)
+- **CFM**: 8+ CFM preferred for stock, 10+ for all-metal hotends
+- **Bearing**: Ball bearing lasts longer than sleeve bearing
+- **Connector**: 2-pin JST or can splice wires
+
+**Upgrade Options**:
+- **Sunon**: Premium brand, 10,000+ hour lifespan
+- **Noctua**: Silent but lower CFM (OK for PLA, marginal for high-temp)
+- **Delta**: Good balance of noise and performance
+- **Generic**: Cheap but may fail after months
+
+**CRITICAL**: This fan should run whenever hotend is hot
+- Many boards power this fan 100% all the time (correct)
+- Some boards control it (can cause heat creep if firmware misconfigured)
+- If in doubt: Wire directly to PSU 24V output (always on)
+
+**Emergency Diagnosis**:
+If heat sink fan fails mid-print:
+1. Stop print immediately
+2. Turn off hotend heater
+3. Leave part cooling fan on at 100% (helps cool hotend)
+4. Don't attempt another print until fan replaced
+
+### Temperature Diagnostic Decision Tree
+
+**Problem: Temperature Won't Rise**
+
+1. Check if heater cartridge is connected (wires plugged in)
+2. Measure heater cartridge resistance (should be 12-16Ω for 24V)
+3. Check if mainboard is sending power (voltage at heater connector)
+4. If power present but not heating: Bad heater cartridge (replace)
+5. If no power from board: Mainboard issue or thermal runaway triggered
+
+**Problem: Temperature Shows Error**
+
+**"MINTEMP" Error**:
+- Thermistor reading 0°C or -14°C
+- Cause 1: Thermistor disconnected (check connector)
+- Cause 2: Thermistor wire broken (common at heat block - wire flex failure)
+- Cause 3: Wrong thermistor type in firmware (change to type 1 for 100K NTC)
+
+**"MAXTEMP" Error**:
+- Thermistor reading 999°C or similar impossibly high
+- Cause 1: Thermistor short circuit (wires touching)
+- Cause 2: Thermistor broken (glass bead cracked)
+- Cause 3: Thermistor wire insulation damaged at heat block
+
+**"THERMAL RUNAWAY" Error**:
+- Temperature drops while heating or can't maintain temp
+- Cause 1: Thermistor loose (vibrates out of position, reads room temp)
+- Cause 2: Heater cartridge loose (not making good thermal contact)
+- Cause 3: Excessive cooling (part fan blowing on heater block)
+- Cause 4: Incorrect PID values (run M303 PID autotune)
+- Cause 5: Power supply insufficient (voltage dropping under load)
+
+**Problem: Temperature Fluctuates**
+
+**±2-3°C Fluctuation**: NORMAL (PID control oscillates slightly)
+
+**±5-10°C Fluctuation**: Problem!
+- Cause 1: Poor PID tuning (run M303 autotune)
+- Cause 2: Thermistor loose (tighten set screw GENTLY)
+- Cause 3: Part cooling fan too strong (reduce to 80% max)
+- Cause 4: Heater cartridge loose (not making thermal contact)
+
+**Temperature Drops During Print**:
+- Part cooling fan blowing on heater block (redirect shroud)
+- Heater cartridge underpowered for speed (print slower or upgrade wattage)
+- Insufficient PID tuning (increase PID_I value)
+
+**Temperature Overshoots Target**:
+- PID too aggressive (reduce PID_P value)
+- Normal on first heat (overshoot on initial heating is OK)
+- Persistent overshoot >5°C: Run PID autotune
+
+### PID Tuning Deep Dive
+
+**What is PID?**
+- **P**roportional: Responds to current temperature error
+- **I**ntegral: Responds to accumulated past error
+- **D**erivative: Responds to rate of change
+
+**When to PID Tune**:
+- After replacing hotend components
+- After changing heater cartridge wattage
+- If temperature fluctuates >5°C
+- After changing firmware
+- If getting thermal runaway errors
+
+**PID Tuning Procedure**:
+
+1. **Hotend** PID Tune:
+```gcode
+M303 E0 S210 C8  ; Tune for 210°C, 8 cycles
+; Wait 10-15 minutes for completion
+M503             ; Display results (shows Kp, Ki, Kd values)
+M500             ; Save to EEPROM
+```
+
+2. **Bed** PID Tune:
+```gcode
+M303 E-1 S60 C8  ; Tune for 60°C, 8 cycles
+; Wait 15-20 minutes (bed is slower)
+M503             ; Display results
+M500             ; Save
+```
+
+**Reading Results**:
+```
+PID Autotune finished! Put the last Kp, Ki and Kd constants into Configuration.h
+  Kp: 21.73
+  Ki: 1.54
+  Kd: 76.55
+```
+
+**Manual PID Adjustment** (Advanced):
+
+If autotune doesn't work well:
+
+**Temperature Overshoots**:
+- Reduce Kp by 10-20%
+- Example: `M301 P19.56 I1.54 D76.55` (reduced Kp from 21.73)
+
+**Temperature Slow to Reach Target**:
+- Increase Kp by 10-20%
+- Increase Ki by 10%
+
+**Temperature Oscillates**:
+- Reduce Kd by 10-20%
+- Increase Ki by 10-20%
+
+**Temperature Drops During Print**:
+- Increase Ki by 20-30%
+- This helps compensate for part cooling fan
+
+**Save Manual PID**:
+```gcode
+M301 P21.73 I1.54 D76.55  ; Set hotend PID
+M304 P120.0 I15.0 D300.0  ; Set bed PID (if needed)
+M500                       ; Save to EEPROM
+```
+
 ### DUAL EXTRUDER / IDEX SPECIFIC ISSUES
 
 **Calibration Challenges**:
@@ -913,6 +1564,182 @@ retry_tolerance: 0.005
 
 **Benefits**: Ultimate reliability, no desync possible, better efficiency
 **Drawbacks**: Complex design, higher cost, requires CAD skills or existing design
+
+## COREXY CONVERSION & TROUBLESHOOTING:
+
+### Converting 2 Ender 3s to CoreXY (Duender Project)
+
+**Why Convert?**
+- 2-3x faster printing (150-300 mm/s vs 60-80 mm/s)
+- Better quality at high speeds (less ringing)
+- Lower moving mass (500g vs 1.5kg)
+- Higher acceleration (3000-7000 mm/s² vs 500-1000 mm/s²)
+
+**Cost**: $200-350 additional parts vs $1200+ for new CoreXY kit
+
+**Key Components Needed**:
+- 2040 aluminum extrusion frame (~$120) - 4x more rigid than 2020
+- 10m GT2 belt (6mm width), 20T pulleys and idlers (~$50)
+- MGN12 linear rails 400mm (~$100) OR reuse V-slot wheels ($0)
+- 3D printed parts from Duender project (Printables.com)
+- Optional: BTT SKR board for modern features ($40)
+
+**Reuse from 2 Ender 3s**:
+- Both XY motors become A & B motors (CoreXY)
+- Z motors, extruder motor, PSU, mainboard, heated bed, hotend
+- All electronics, endstops, thermistors, fans, hardware
+
+### CoreXY Kinematics Understanding
+
+**Motion System**:
+- Two stationary motors (A & B) control XY through coordinated belt movements
+- X movement: Motors A & B rotate OPPOSITE directions
+- Y movement: Motors A & B rotate SAME direction
+- Critical: Both motors share load symmetrically
+
+**Belt Routing Options**:
+1. **Crossed Belts** (traditional): Single belt crosses over itself
+2. **Stacked Belts** (easier): Belts run parallel at different heights - RECOMMENDED for first build
+
+### CRITICAL: Belt Tension Matching
+
+**#1 Most Important Calibration**:
+- Both belts MUST be 90-98 Hz frequency
+- Belts MUST be within 2 Hz of each other
+- Use phone app: "Gates Carbon Drive" (free)
+- Unequal tension = diagonal shifts, parallelograms, layer misalignment
+
+**Tensioning Procedure**:
+1. Pluck Belt A like guitar string, measure frequency (e.g. 92 Hz)
+2. Pluck Belt B, measure frequency (e.g. 95 Hz)
+3. Calculate difference: 95 - 92 = 3 Hz (TOO MUCH!)
+4. Adjust tensioners until BOTH 90-98 Hz AND within 2 Hz
+5. Good result example: Belt A = 93 Hz, Belt B = 94 Hz ✓
+
+### CoreXY Firmware Configuration
+
+**Marlin** (Configuration.h):
+```cpp
+#define COREXY  // Line ~90 - REQUIRED
+
+// Motor directions (adjust after testing)
+#define INVERT_X_DIR false  // A motor
+#define INVERT_Y_DIR true   // B motor
+
+// Start conservative, increase after tuning
+#define DEFAULT_MAX_FEEDRATE { 300, 300, 5, 25 }  // mm/s
+#define DEFAULT_MAX_ACCELERATION { 3000, 3000, 100, 5000 }  // mm/s²
+```
+
+**Klipper** (printer.cfg - RECOMMENDED):
+```ini
+[printer]
+kinematics: corexy  # REQUIRED
+max_velocity: 300
+max_accel: 3000
+
+[stepper_x]  # A motor (was Ender 3 X motor)
+rotation_distance: 40  # GT2 20T pulley
+dir_pin: PB9  # Add ! to invert if needed
+
+[stepper_y]  # B motor (was Ender 3 Y motor)
+rotation_distance: 40
+dir_pin: PB7  # Add ! to invert if needed
+```
+
+### CoreXY Troubleshooting
+
+**Problem: Prints Come Out as Parallelograms Instead of Rectangles**
+**Symptoms**: 20mm square cube prints as diamond/skewed shape
+**Causes & Fixes**:
+1. **Belt tension mismatch** (MOST COMMON - 80% of cases)
+   - Diagnostic: Measure both belts with frequency app
+   - Solution: Adjust until within 2 Hz (target 90-98 Hz each)
+2. Loose motor pulley
+   - Diagnostic: Try rotating pulleys by hand - should be very firm
+   - Solution: Tighten set screws on motor shaft flats (not rounded part)
+3. Firmware not set to CoreXY
+   - Diagnostic: Check Configuration.h for `#define COREXY` or printer.cfg for `kinematics: corexy`
+   - Solution: Enable CoreXY in firmware and reflash
+
+**Problem: Diagonal Layer Shifts or "Walking" Prints**
+**Symptoms**: Print suddenly shifts diagonally mid-print, consistent direction
+**Causes & Fixes**:
+1. One belt much looser than other
+   - Diagnostic: Push on toolhead, feel if one direction has more play
+   - Solution: Tension to match frequency (within 2 Hz)
+2. Belt skipping on smooth idler
+   - Diagnostic: Inspect belt teeth for wear or damage
+   - Solution: Replace smooth idlers with toothed idlers where belt changes direction sharply
+3. Motor current too low for high acceleration
+   - Diagnostic: Listen for motor grinding/stuttering during fast moves
+   - Solution: Increase stepper driver current (Vref) by 10-20%
+
+**Problem: Can Only Move Diagonally, Not Square Movements**
+**Symptoms**: G1 X10 moves diagonally instead of purely left-right
+**Causes & Fixes**:
+1. **Firmware kinematics not set to CoreXY** (100% of cases)
+   - Diagnostic: Check firmware configuration
+   - Solution: Add `#define COREXY` in Marlin or `kinematics: corexy` in Klipper, reflash
+
+**Problem: Motors Stalling or Grinding on CoreXY**
+**Symptoms**: Motors make grinding noise, can't complete moves, occasional stalling
+**Causes & Fixes**:
+1. Belts too tight (over 100 Hz)
+   - Diagnostic: Measure belt frequency
+   - Solution: Reduce tension to 90-98 Hz range
+2. Linear rails binding or misaligned
+   - Diagnostic: Disconnect belts, move carriage by hand - should glide smoothly
+   - Solution: Realign rails using straightedge, tighten from center outward
+3. Acceleration set too high for frame rigidity
+   - Diagnostic: Reduce max_accel to 2000 mm/s² and test
+   - Solution: Add frame bracing OR upgrade to 2040 extrusions
+
+**Problem: Excessive Ringing/Ghosting on CoreXY**
+**Symptoms**: Ripple patterns after sharp corners and direction changes
+**Causes & Fixes**:
+1. Frame not rigid enough
+   - Diagnostic: Push on frame corners - should have minimal flex
+   - Solution: Upgrade 2020 → 2040 extrusions (4x more rigid), add diagonal braces
+2. Belt tension unequal
+   - Diagnostic: Measure frequency difference
+   - Solution: Match belts within 2 Hz
+3. Need input shaping (Klipper)
+   - Diagnostic: Run `SHAPER_CALIBRATE`
+   - Solution: Enable input shaping with calibrated values (typically MZV, 40-60 Hz)
+
+**Problem: One Axis Works, Other Doesn't Move**
+**Symptoms**: Can move in X but not Y (or vice versa)
+**Causes & Fixes**:
+1. Motor wiring loose or disconnected
+   - Diagnostic: Check connections at mainboard and motor
+   - Solution: Reseat connectors, verify continuity
+2. Motor direction inverted incorrectly
+   - Diagnostic: In CoreXY both motors should turn for every axis movement
+   - Solution: Check firmware dir_pin settings - may need to add or remove `!`
+3. Belt not properly attached to toolhead carriage
+   - Diagnostic: Visually inspect belt connection points
+   - Solution: Ensure belts securely fastened with belt clamps
+
+### CoreXY Performance Tuning
+
+**Speed Progression**:
+1. Start: 60 mm/s, 1000 mm/s² (Ender 3 speeds)
+2. Test: 100 mm/s, 2000 mm/s² (calibration cube, check quality)
+3. Increase: 150 mm/s, 3000 mm/s² (good quality target)
+4. High performance: 200-250 mm/s, 5000-7000 mm/s² (well-tuned builds)
+
+**Quality Checks at Each Step**:
+- 20mm calibration cube: Should measure 20.00mm ± 0.1mm on all sides
+- Should be perfect square (not parallelogram)
+- No visible ringing or layer misalignment
+- Corners should be sharp
+
+**Input Shaping** (Klipper only):
+- Eliminates ringing without reducing speed
+- Run `SHAPER_CALIBRATE` command
+- Typically results: MZV shaper, 40-60 Hz
+- Can often print at 250+ mm/s with quality better than stock Ender 3 at 60 mm/s
 
 ## Communication Guidelines:
 
