@@ -914,6 +914,182 @@ retry_tolerance: 0.005
 **Benefits**: Ultimate reliability, no desync possible, better efficiency
 **Drawbacks**: Complex design, higher cost, requires CAD skills or existing design
 
+## COREXY CONVERSION & TROUBLESHOOTING:
+
+### Converting 2 Ender 3s to CoreXY (Duender Project)
+
+**Why Convert?**
+- 2-3x faster printing (150-300 mm/s vs 60-80 mm/s)
+- Better quality at high speeds (less ringing)
+- Lower moving mass (500g vs 1.5kg)
+- Higher acceleration (3000-7000 mm/s² vs 500-1000 mm/s²)
+
+**Cost**: $200-350 additional parts vs $1200+ for new CoreXY kit
+
+**Key Components Needed**:
+- 2040 aluminum extrusion frame (~$120) - 4x more rigid than 2020
+- 10m GT2 belt (6mm width), 20T pulleys and idlers (~$50)
+- MGN12 linear rails 400mm (~$100) OR reuse V-slot wheels ($0)
+- 3D printed parts from Duender project (Printables.com)
+- Optional: BTT SKR board for modern features ($40)
+
+**Reuse from 2 Ender 3s**:
+- Both XY motors become A & B motors (CoreXY)
+- Z motors, extruder motor, PSU, mainboard, heated bed, hotend
+- All electronics, endstops, thermistors, fans, hardware
+
+### CoreXY Kinematics Understanding
+
+**Motion System**:
+- Two stationary motors (A & B) control XY through coordinated belt movements
+- X movement: Motors A & B rotate OPPOSITE directions
+- Y movement: Motors A & B rotate SAME direction
+- Critical: Both motors share load symmetrically
+
+**Belt Routing Options**:
+1. **Crossed Belts** (traditional): Single belt crosses over itself
+2. **Stacked Belts** (easier): Belts run parallel at different heights - RECOMMENDED for first build
+
+### CRITICAL: Belt Tension Matching
+
+**#1 Most Important Calibration**:
+- Both belts MUST be 90-98 Hz frequency
+- Belts MUST be within 2 Hz of each other
+- Use phone app: "Gates Carbon Drive" (free)
+- Unequal tension = diagonal shifts, parallelograms, layer misalignment
+
+**Tensioning Procedure**:
+1. Pluck Belt A like guitar string, measure frequency (e.g. 92 Hz)
+2. Pluck Belt B, measure frequency (e.g. 95 Hz)
+3. Calculate difference: 95 - 92 = 3 Hz (TOO MUCH!)
+4. Adjust tensioners until BOTH 90-98 Hz AND within 2 Hz
+5. Good result example: Belt A = 93 Hz, Belt B = 94 Hz ✓
+
+### CoreXY Firmware Configuration
+
+**Marlin** (Configuration.h):
+```cpp
+#define COREXY  // Line ~90 - REQUIRED
+
+// Motor directions (adjust after testing)
+#define INVERT_X_DIR false  // A motor
+#define INVERT_Y_DIR true   // B motor
+
+// Start conservative, increase after tuning
+#define DEFAULT_MAX_FEEDRATE { 300, 300, 5, 25 }  // mm/s
+#define DEFAULT_MAX_ACCELERATION { 3000, 3000, 100, 5000 }  // mm/s²
+```
+
+**Klipper** (printer.cfg - RECOMMENDED):
+```ini
+[printer]
+kinematics: corexy  # REQUIRED
+max_velocity: 300
+max_accel: 3000
+
+[stepper_x]  # A motor (was Ender 3 X motor)
+rotation_distance: 40  # GT2 20T pulley
+dir_pin: PB9  # Add ! to invert if needed
+
+[stepper_y]  # B motor (was Ender 3 Y motor)
+rotation_distance: 40
+dir_pin: PB7  # Add ! to invert if needed
+```
+
+### CoreXY Troubleshooting
+
+**Problem: Prints Come Out as Parallelograms Instead of Rectangles**
+**Symptoms**: 20mm square cube prints as diamond/skewed shape
+**Causes & Fixes**:
+1. **Belt tension mismatch** (MOST COMMON - 80% of cases)
+   - Diagnostic: Measure both belts with frequency app
+   - Solution: Adjust until within 2 Hz (target 90-98 Hz each)
+2. Loose motor pulley
+   - Diagnostic: Try rotating pulleys by hand - should be very firm
+   - Solution: Tighten set screws on motor shaft flats (not rounded part)
+3. Firmware not set to CoreXY
+   - Diagnostic: Check Configuration.h for `#define COREXY` or printer.cfg for `kinematics: corexy`
+   - Solution: Enable CoreXY in firmware and reflash
+
+**Problem: Diagonal Layer Shifts or "Walking" Prints**
+**Symptoms**: Print suddenly shifts diagonally mid-print, consistent direction
+**Causes & Fixes**:
+1. One belt much looser than other
+   - Diagnostic: Push on toolhead, feel if one direction has more play
+   - Solution: Tension to match frequency (within 2 Hz)
+2. Belt skipping on smooth idler
+   - Diagnostic: Inspect belt teeth for wear or damage
+   - Solution: Replace smooth idlers with toothed idlers where belt changes direction sharply
+3. Motor current too low for high acceleration
+   - Diagnostic: Listen for motor grinding/stuttering during fast moves
+   - Solution: Increase stepper driver current (Vref) by 10-20%
+
+**Problem: Can Only Move Diagonally, Not Square Movements**
+**Symptoms**: G1 X10 moves diagonally instead of purely left-right
+**Causes & Fixes**:
+1. **Firmware kinematics not set to CoreXY** (100% of cases)
+   - Diagnostic: Check firmware configuration
+   - Solution: Add `#define COREXY` in Marlin or `kinematics: corexy` in Klipper, reflash
+
+**Problem: Motors Stalling or Grinding on CoreXY**
+**Symptoms**: Motors make grinding noise, can't complete moves, occasional stalling
+**Causes & Fixes**:
+1. Belts too tight (over 100 Hz)
+   - Diagnostic: Measure belt frequency
+   - Solution: Reduce tension to 90-98 Hz range
+2. Linear rails binding or misaligned
+   - Diagnostic: Disconnect belts, move carriage by hand - should glide smoothly
+   - Solution: Realign rails using straightedge, tighten from center outward
+3. Acceleration set too high for frame rigidity
+   - Diagnostic: Reduce max_accel to 2000 mm/s² and test
+   - Solution: Add frame bracing OR upgrade to 2040 extrusions
+
+**Problem: Excessive Ringing/Ghosting on CoreXY**
+**Symptoms**: Ripple patterns after sharp corners and direction changes
+**Causes & Fixes**:
+1. Frame not rigid enough
+   - Diagnostic: Push on frame corners - should have minimal flex
+   - Solution: Upgrade 2020 → 2040 extrusions (4x more rigid), add diagonal braces
+2. Belt tension unequal
+   - Diagnostic: Measure frequency difference
+   - Solution: Match belts within 2 Hz
+3. Need input shaping (Klipper)
+   - Diagnostic: Run `SHAPER_CALIBRATE`
+   - Solution: Enable input shaping with calibrated values (typically MZV, 40-60 Hz)
+
+**Problem: One Axis Works, Other Doesn't Move**
+**Symptoms**: Can move in X but not Y (or vice versa)
+**Causes & Fixes**:
+1. Motor wiring loose or disconnected
+   - Diagnostic: Check connections at mainboard and motor
+   - Solution: Reseat connectors, verify continuity
+2. Motor direction inverted incorrectly
+   - Diagnostic: In CoreXY both motors should turn for every axis movement
+   - Solution: Check firmware dir_pin settings - may need to add or remove `!`
+3. Belt not properly attached to toolhead carriage
+   - Diagnostic: Visually inspect belt connection points
+   - Solution: Ensure belts securely fastened with belt clamps
+
+### CoreXY Performance Tuning
+
+**Speed Progression**:
+1. Start: 60 mm/s, 1000 mm/s² (Ender 3 speeds)
+2. Test: 100 mm/s, 2000 mm/s² (calibration cube, check quality)
+3. Increase: 150 mm/s, 3000 mm/s² (good quality target)
+4. High performance: 200-250 mm/s, 5000-7000 mm/s² (well-tuned builds)
+
+**Quality Checks at Each Step**:
+- 20mm calibration cube: Should measure 20.00mm ± 0.1mm on all sides
+- Should be perfect square (not parallelogram)
+- No visible ringing or layer misalignment
+- Corners should be sharp
+
+**Input Shaping** (Klipper only):
+- Eliminates ringing without reducing speed
+- Run `SHAPER_CALIBRATE` command
+- Typically results: MZV shaper, 40-60 Hz
+- Can often print at 250+ mm/s with quality better than stock Ender 3 at 60 mm/s
+
 ## Communication Guidelines:
 
 1. **Assess User's Technical Level**: Ask about their experience early
