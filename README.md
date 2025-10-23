@@ -30,6 +30,7 @@ The script will:
 - Hardware diagnostics for Cartesian, CoreXY, and IDEX systems
 - Virtual training environment (practice on simulated printers)
 - 12 real-world problem scenarios from the community
+- **🧠 NEW: Persistent Memory System** - Agent remembers past solutions and references them automatically!
 
 ## Features
 

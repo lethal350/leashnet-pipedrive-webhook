@@ -99,6 +99,13 @@ Available Commands:
   context           - Add printer context (model, filament, temps)
   reset             - Reset conversation and start fresh
   export            - Export conversation to JSON file
+
+Memory Commands:
+  save              - Save current conversation to memory
+  search            - Search memory for past solutions
+  list              - List all saved memories
+  stats             - Show memory statistics
+
   quit / exit       - Exit the program
 
 Example Usage:
@@ -106,11 +113,13 @@ Example Usage:
   > diagnose
   > My prints have gaps between layers
 
-  > continue
-  > How do I calibrate e-steps?
+  > save
+  > Problem: gaps | Solution: increased flow rate | Tags: extrusion
 
-  > context
-  > Printer: Ender 3 Pro, Filament: PLA, Temp: 200C
+  > search
+  > belt tension issues
+
+  > list
 """
         self._print_info(help_text)
 
@@ -217,6 +226,96 @@ Example Usage:
         self.agent.reset_conversation()
         self._print_success("Conversation reset. Starting fresh.")
 
+    def save_conversation_to_memory(self):
+        """Save current conversation to memory."""
+        if not self.agent.conversation_history:
+            self._print_error("No conversation to save")
+            return
+
+        print()
+        self._print_info("Save this conversation to memory")
+        problem = self._get_input("Problem summary")
+        if not problem:
+            self._print_error("Problem summary required")
+            return
+
+        solution = self._get_input("Solution summary")
+        if not solution:
+            self._print_error("Solution summary required")
+            return
+
+        tags_input = self._get_input("Tags (comma-separated, e.g., hotend,clog,pla)")
+        tags = [t.strip() for t in tags_input.split(',')] if tags_input else []
+
+        success_input = self._get_input("Was this solution successful? (yes/no)")
+        success = success_input.lower() in ['yes', 'y', '']
+
+        notes = self._get_input("Additional notes (optional)")
+
+        self.agent.save_to_memory(
+            problem_summary=problem,
+            solution_summary=solution,
+            tags=tags,
+            success=success,
+            notes=notes if notes else None
+        )
+
+    def search_memory_ui(self):
+        """Search memory interface."""
+        print()
+        query = self._get_input("Search query")
+        if not query:
+            return
+
+        limit_input = self._get_input("Max results (default: 5)")
+        limit = int(limit_input) if limit_input and limit_input.isdigit() else 5
+
+        print()
+        self._print_info("Searching memory...")
+        self.agent.search_memory(query, limit=limit, show_details=True)
+
+    def list_memories_ui(self):
+        """List all memories interface."""
+        print()
+        sort_input = self._get_input("Sort by (timestamp/usage/helpful) [default: timestamp]")
+        sort_by = sort_input if sort_input in ['usage_count', 'helpful_count'] else 'timestamp'
+
+        if sort_by == 'usage':
+            sort_by = 'usage_count'
+        elif sort_by == 'helpful':
+            sort_by = 'helpful_count'
+
+        limit_input = self._get_input("Max results (default: 20)")
+        limit = int(limit_input) if limit_input and limit_input.isdigit() else 20
+
+        print()
+        self.agent.list_memories(limit=limit, sort_by=sort_by)
+
+    def show_memory_stats(self):
+        """Show memory statistics."""
+        stats = self.agent.get_memory_stats()
+
+        if "error" in stats:
+            self._print_error(stats["error"])
+            return
+
+        print()
+        self._print_header("Memory Statistics")
+        print(f"\nTotal Memories: {stats['total_memories']}")
+        print(f"Successful Solutions: {stats['successful_solutions']}")
+        print(f"Total Times Referenced: {stats['total_usage']}")
+
+        if stats['most_common_tags']:
+            print(f"\nMost Common Tags:")
+            for tag, count in stats['most_common_tags']:
+                print(f"  - {tag}: {count} times")
+
+        if stats['most_helpful']:
+            print(f"\nMost Helpful Memories:")
+            for mem in stats['most_helpful']:
+                print(f"  - {mem['id']}: {mem['problem']} (helpful: {mem['helpful_count']})")
+        print()
+
     def run(self):
         """Run the interactive CLI."""
         self._print_header("3D Printer Maintenance Agent")
@@ -254,6 +353,18 @@ Example Usage:
 
                 elif command in ['export', 'e']:
                     self.export_conversation()
+
+                elif command in ['save', 's']:
+                    self.save_conversation_to_memory()
+
+                elif command in ['search']:
+                    self.search_memory_ui()
+
+                elif command in ['list', 'l']:
+                    self.list_memories_ui()
+
+                elif command in ['stats']:
+                    self.show_memory_stats()
 
                 else:
                     self._print_error(f"Unknown command: {command}")

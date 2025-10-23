@@ -11,8 +11,14 @@ This agent is designed to:
 
 import os
 import json
+import sys
+from pathlib import Path
 from typing import Dict, List, Optional
 from anthropic import Anthropic
+
+# Add parent directory to path for memory_system import
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from memory_system import ConversationMemory
 
 
 class PrinterMaintenanceAgent:
@@ -21,12 +27,13 @@ class PrinterMaintenanceAgent:
     particularly for Ender 3 and similar FDM printers.
     """
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, enable_memory: bool = True):
         """
         Initialize the Printer Maintenance Agent.
 
         Args:
             api_key: Anthropic API key (defaults to ANTHROPIC_API_KEY env var)
+            enable_memory: Enable persistent memory system (default: True)
         """
         self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
         if not self.api_key:
@@ -34,6 +41,13 @@ class PrinterMaintenanceAgent:
 
         self.client = Anthropic(api_key=self.api_key)
         self.conversation_history = []
+
+        # Initialize memory system
+        self.enable_memory = enable_memory
+        if self.enable_memory:
+            self.memory = ConversationMemory()
+        else:
+            self.memory = None
 
         # Define the agent's specialized knowledge and behavior
         self.system_prompt = self._build_system_prompt()
@@ -1807,10 +1821,32 @@ Remember: Your goal is not just to fix the current problem, but to help users be
                 context_str += f"- {key}: {value}\n"
             full_query = context_str + "\n" + user_query
 
-        # Add user message to conversation history
+        # Search memory for relevant past experiences
+        memory_context = ""
+        relevant_memories = []
+        if self.enable_memory and self.memory:
+            relevant_memories = self.memory.search(
+                user_query,
+                limit=3,
+                min_relevance=0.2,
+                success_only=True
+            )
+
+            if relevant_memories:
+                memory_context = "\n\n## RELEVANT PAST EXPERIENCES:\n"
+                memory_context += "You have encountered similar issues before. Here are relevant past solutions:\n"
+                for memory, relevance in relevant_memories:
+                    memory_context += self.memory.format_memory_for_agent(memory)
+                    memory_context += f"\n**Relevance Score**: {relevance:.2f}\n"
+                    memory_context += "---\n"
+
+                memory_context += "\nConsider these past experiences when diagnosing, but don't assume the exact same solution applies. Analyze the current situation independently.\n"
+
+        # Add user message to conversation history with memory context
+        final_query = full_query + memory_context
         self.conversation_history.append({
             "role": "user",
-            "content": full_query
+            "content": final_query
         })
 
         # Call Claude API with specialized system prompt
@@ -1868,6 +1904,142 @@ Remember: Your goal is not just to fix the current problem, but to help users be
         query = f"""What are the best upgrade recommendations for an Ender 3 printer
         focused on: {use_case}? Please prioritize by impact and cost-effectiveness."""
         return self.diagnose(query)
+
+    def save_to_memory(
+        self,
+        problem_summary: str,
+        solution_summary: str,
+        tags: Optional[List[str]] = None,
+        success: bool = True,
+        notes: Optional[str] = None
+    ) -> Optional[str]:
+        """
+        Save the current conversation to persistent memory.
+
+        Args:
+            problem_summary: Brief summary of the problem
+            solution_summary: Brief summary of the solution
+            tags: Tags for categorization (e.g., ["hotend", "clog", "pla"])
+            success: Whether the solution was successful
+            notes: Optional user notes about the solution
+
+        Returns:
+            Memory ID if saved, None if memory disabled
+        """
+        if not self.enable_memory or not self.memory:
+            print("Memory system is disabled")
+            return None
+
+        if not self.conversation_history:
+            print("No conversation to save")
+            return None
+
+        memory_id = self.memory.add_conversation(
+            problem=problem_summary,
+            solution=solution_summary,
+            conversation_history=self.conversation_history,
+            tags=tags,
+            success=success,
+            notes=notes
+        )
+
+        print(f"✓ Conversation saved to memory: {memory_id}")
+        return memory_id
+
+    def search_memory(
+        self,
+        query: str,
+        limit: int = 5,
+        show_details: bool = True
+    ) -> List:
+        """
+        Search memory for relevant past conversations.
+
+        Args:
+            query: Search query
+            limit: Maximum number of results
+            show_details: Print details of found memories
+
+        Returns:
+            List of (memory, relevance_score) tuples
+        """
+        if not self.enable_memory or not self.memory:
+            print("Memory system is disabled")
+            return []
+
+        results = self.memory.search(query, limit=limit)
+
+        if show_details and results:
+            print(f"\nFound {len(results)} relevant memories:\n")
+            for i, (memory, score) in enumerate(results, 1):
+                print(f"{i}. {memory['id']} (relevance: {score:.2f})")
+                print(f"   Problem: {memory['problem'][:80]}...")
+                print(f"   Solution: {memory['solution'][:80]}...")
+                print(f"   Date: {memory['timestamp']}")
+                print(f"   Success: {'✓' if memory.get('success') else '✗'}")
+                print(f"   Used: {memory.get('usage_count', 0)} times")
+                print()
+
+        return results
+
+    def get_memory_stats(self) -> Dict:
+        """
+        Get memory system statistics.
+
+        Returns:
+            Statistics dictionary
+        """
+        if not self.enable_memory or not self.memory:
+            return {"error": "Memory system is disabled"}
+
+        return self.memory.get_statistics()
+
+    def list_memories(self, limit: int = 20, sort_by: str = "timestamp"):
+        """
+        List all stored memories.
+
+        Args:
+            limit: Maximum number to list
+            sort_by: Sort field ("timestamp", "usage_count", "helpful_count")
+        """
+        if not self.enable_memory or not self.memory:
+            print("Memory system is disabled")
+            return
+
+        memories = self.memory.list_all(limit=limit, sort_by=sort_by)
+
+        if not memories:
+            print("No memories stored yet")
+            return
+
+        print(f"\n{len(memories)} memories (sorted by {sort_by}):\n")
+        for i, mem in enumerate(memories, 1):
+            print(f"{i}. {mem['id']}")
+            print(f"   {mem['problem']}")
+            print(f"   Date: {mem['timestamp']}")
+            print(f"   Tags: {', '.join(mem['tags']) if mem['tags'] else 'none'}")
+            print(f"   Used: {mem['usage_count']} times | Helpful: {mem['helpful_count']}")
+            print()
+
+    def mark_memory_helpful(self, memory_id: str):
+        """Mark a memory as helpful."""
+        if self.enable_memory and self.memory:
+            self.memory.mark_helpful(memory_id)
+            print(f"✓ Marked {memory_id} as helpful")
+
+    def mark_memory_unhelpful(self, memory_id: str):
+        """Mark a memory as unhelpful."""
+        if self.enable_memory and self.memory:
+            self.memory.mark_unhelpful(memory_id)
+            print(f"✓ Marked {memory_id} as unhelpful")
+
+    def delete_memory(self, memory_id: str):
+        """Delete a memory."""
+        if self.enable_memory and self.memory:
+            if self.memory.delete_memory(memory_id):
+                print(f"✓ Deleted {memory_id}")
+            else:
+                print(f"✗ Memory {memory_id} not found")
 
     def export_conversation(self, filepath: str):
         """
